@@ -8,9 +8,14 @@ from dataloader.database import DatabaseManager
 from dataloader.loading import load_from_directories
 
 
+@click.group()
+def cli():
+    pass
+
+
 @click.command()
 @click.argument('directories', nargs=-1, required=True, type=click.Path(exists=True, file_okay=False))
-def cli(directories: Tuple[str]):
+def load_tipster(directories: Tuple[str]):
     with DatabaseManager() as database:
         loader = load_from_directories(directories)
         count: int = 0
@@ -22,6 +27,8 @@ def cli(directories: Tuple[str]):
             print(f'\r{count} documents inserted', end='')
 
         print('\nLoading finished')
+
+cli.add_command(load_tipster)
 
 if __name__ == '__main__':
     cli()

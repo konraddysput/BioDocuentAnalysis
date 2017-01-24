@@ -7,6 +7,7 @@
 
 * click 6.7
 * pymongo 3.4.0
+* pandas 0.19.2
 
 ## Installation
 To install the project one must clone this repository:
@@ -21,5 +22,5 @@ pip install -e BioDocumentAnalysis
 ## Usage
 Running the loader:
 ```sh
-TipsterDataLoader <path_1> <path_2> <path_3>
+TipsterDataLoader load_tipster <path_1> <path_2> <path_3>
 ```
