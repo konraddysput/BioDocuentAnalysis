@@ -18,5 +18,6 @@ setup(
         'pymongo',
         'click',
         'pandas',
+        'scipy'
     ],
 )
