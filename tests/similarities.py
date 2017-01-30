@@ -25,3 +25,12 @@ if __name__ == "__main__":
         model.classifier = euclsim
         print("Euclidian sim: %f" % model.similarity(word1, word2))
         print()
+
+    for i in range(0, 500):
+        model.classifier = cossim
+
+        word1: str = random.choice(words)
+        print("Our today word is %s" % word1)
+        sililar = model.find_most_similar_words(word1,1000)
+        for tuple in sililar:
+            print("Word: %s,    Similarity: %f" % (tuple[0], tuple[1]))
