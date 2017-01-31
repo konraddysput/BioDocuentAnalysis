@@ -27,6 +27,17 @@ if __name__ == '__main__':
         print(f'Euclidian sim: {model.similarity(word1, word2)}')
         print()
 
+    print('Most similar - cosine similarity')
+    model.classifier = cosine_similarity
+    for i in range(0, 500):
+        word1: str = random.choice(words)
+        print(f'Our today word is {word1}')
+        most_similar_words = model.find_most_similar_words(word1, 1000)
+        for word, similarity in most_similar_words:
+            print(f'Word: {word}, Similarity: {similarity}')
+
+    print('Most similar - euclidean similarity')
+    model.classifier = euclidean_similarity
     for i in range(0, 500):
         word1: str = random.choice(words)
         print(f'Our today word is {word1}')
