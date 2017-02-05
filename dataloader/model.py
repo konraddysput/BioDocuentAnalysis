@@ -8,7 +8,7 @@ from dataloader.sim_regression import SimRegression
 
 
 class LanguageModel:
-    def __init__(self, path: str, classifier: SimRegression):
+    def __init__(self, path: str, classifier: SimRegression = None):
         words: np.ndarray = pd.read_csv(path, sep=' ', quoting=3, header=None, usecols=(0,)).values.squeeze()
 
         self._dictionary: Dict[str, int] = dict(zip(words, range(len(words))))
@@ -25,6 +25,7 @@ class LanguageModel:
     def find_most_similar_words(self, word: str, number_of_results: int) -> List[Tuple[str, float]]:
         scores: Dict[str, int] = {}
         for word2, index in self._dictionary.items():
-            scores[word2] = self.similarity(word, word2)
+            if word2 != word:
+                scores[word2] = self.similarity(word, word2)
 
         return sorted(scores.items(), key=itemgetter(1))[:number_of_results]
