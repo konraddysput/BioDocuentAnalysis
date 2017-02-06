@@ -3,6 +3,7 @@ from typing import Dict, Tuple, List
 
 import numpy as np
 import pandas as pd
+import time
 
 from dataloader.sim_regression import SimRegression
 
@@ -26,6 +27,9 @@ class LanguageModel:
         scores: Dict[str, int] = {}
         for word2, index in self._dictionary.items():
             if word2 != word:
+                start = time.time()
                 scores[word2] = self.similarity(word, word2)
+                end = time.time()
+                print(f'{index + 1}/400000 {end - start}s')
 
         return sorted(scores.items(), key=itemgetter(1))[:number_of_results]
