@@ -3,7 +3,7 @@ from dataloader.sim_regression import SimRegression
 from dataloader.model import LanguageModel
 from typing import Dict
 
-class SemanticSimilarity(SimRegression):
+class PFunction(SimRegression):
     def __init__(self, language_model: LanguageModel, classifier: SimRegression):
         self.classifier: SimRegression = classifier
         self.language_model: LanguageModel = language_model
