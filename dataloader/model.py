@@ -1,6 +1,9 @@
 from operator import itemgetter
 from typing import Dict, Tuple, List
 
+import redis
+
+from dataloader.semantic_similarity import calculate_similarity, CppSemanticSimilarity
 import numpy as np
 import pandas as pd
 import time
@@ -13,23 +16,19 @@ class LanguageModel:
         words: np.ndarray = pd.read_csv(path, sep=' ', quoting=3, header=None, usecols=(0,)).values.squeeze()
 
         self._dictionary: Dict[str, int] = dict(zip(words, range(len(words))))
-        self._vectors: np.ndarray = pd.read_csv(path, sep=' ', quoting=3, header=None, usecols=range(1, 51)).values
+        self._vectors: np.ndarray = pd.read_csv(path, sep=' ', quoting=3, header=None, usecols=range(1, 51),
+                                                dtype=np.float32).values
 
         self.classifier: SimRegression = classifier
+        self._similarity = CppSemanticSimilarity(self._vectors)
 
     def similarity(self, word1: str, word2: str):
         if word1 in self._dictionary and word2 in self._dictionary:
-            return self.classifier.calculate_similarity(self._vectors[self._dictionary[word1]],
-                                                        self._vectors[self._dictionary[word2]])
+            return self._similarity.calculate_similarity(self._vectors[self._dictionary[word1]],
+                                                         self._vectors[self._dictionary[word2]])
         return None
 
     def find_most_similar_words(self, word: str, number_of_results: int) -> List[Tuple[str, float]]:
-        scores: Dict[str, int] = {}
-        for word2, index in self._dictionary.items():
-            if word2 != word:
-                start = time.time()
-                scores[word2] = self.similarity(word, word2)
-                end = time.time()
-                print(f'{index + 1}/400000 {end - start}s')
+        print(self._similarity.find_most_similar_words(self._dictionary[word], number_of_results))
 
-        return sorted(scores.items(), key=itemgetter(1))[:number_of_results]
+        return None

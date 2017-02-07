@@ -1,6 +1,18 @@
-from setuptools import setup, find_packages
+from Cython.Build import cythonize
+from setuptools import setup, find_packages, Extension
 
 from dataloader import __version__
+
+extensions = [
+    Extension(
+        'dataloader.semantic_similarity',
+        ['dataloader/semantic_similarity.pyx'],
+        libraries=['accelerator'],
+        language='c++',
+        extra_compile_args=['-std=c++1z', '-O3', '-fopenmp'],
+        extra_link_args=['-std=c++1z', '-fopenmp', '-L./libraries/document-search-accelerator/build'],
+    ),
+]
 
 setup(
     name='TipsterDataLoader',
@@ -18,6 +30,10 @@ setup(
         'pymongo',
         'click',
         'pandas',
-        'scipy'
+        'scipy',
+        'cython',
+        'redis',
     ],
+
+    ext_modules=cythonize(extensions)
 )

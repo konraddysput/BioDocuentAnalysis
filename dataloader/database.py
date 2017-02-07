@@ -2,6 +2,7 @@ from functools import partial
 from operator import is_not
 from xml.etree.ElementTree import Element
 
+import redis
 from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.database import Database
