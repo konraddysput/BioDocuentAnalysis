@@ -1,12 +1,8 @@
-from operator import itemgetter
 from typing import Dict, Tuple, List
-
-import redis
 
 from dataloader.semantic_similarity import calculate_similarity, CppSemanticSimilarity
 import numpy as np
 import pandas as pd
-import time
 
 from dataloader.sim_regression import SimRegression
 
