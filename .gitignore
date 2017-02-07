@@ -88,5 +88,9 @@ ENV/
 # Rope project settings
 .ropeproject
 
+# C and CPP files
+*.c
+*.cpp
+
 # PyCharm
 .idea/

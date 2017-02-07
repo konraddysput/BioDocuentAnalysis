@@ -1,7 +1,7 @@
 from dataloader.model import LanguageModel
 from dataloader.cosine_similarity import CosineSimilarity
-from dataloader.semantic_similarity import SemanticSimilarity
 import random
+
 
 def semantic_sim(model: LanguageModel, word1: str, word2: str):
     numerator = model.similarity(word1, word2)
@@ -14,8 +14,5 @@ def semantic_sim(model: LanguageModel, word1: str, word2: str):
 
 if __name__ == '__main__':
     random.seed(2017)
-    cosine_similarity = CosineSimilarity()
     model = LanguageModel('glove.6B.50d.txt')
-    semantic_similarity = SemanticSimilarity(model, cosine_similarity)
-    model.classifier = semantic_similarity
-    print(model.find_most_similar_words("dog", 10))
+    print(model.find_most_similar_words("dog", 1))
