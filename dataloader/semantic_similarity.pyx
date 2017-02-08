@@ -1,6 +1,7 @@
 import numpy as np
 cimport numpy as np
 from libcpp.vector cimport vector
+from libcpp.string cimport string
 
 
 cdef inline float _cosine(np.ndarray[np.float32_t, ndim=1] vector_a, np.ndarray[np.float32_t, ndim=1] vector_b):
@@ -31,22 +32,33 @@ cpdef float calculate_sum_py(np.ndarray[np.float32_t, ndim=1] vector, np.ndarray
 
 cdef extern from "../libraries/document-search-accelerator/accelerator.hpp":
     cdef cppclass SemanticSimilarity:
-        SemanticSimilarity(float *vocabulary, int rows, int cols)
+        SemanticSimilarity(vector[string] words, float *vocabulary, int rows, int cols)
+        void generate_sums_cache()
         float calculate_similarity(float *vector_a, float *vector_b, int length)
-        vector[float] find_most_similar_words(int word_index, int number)
+        vector[float] find_most_similar_words(string word, int number)
 
 
 cdef class CppSemanticSimilarity:
     cdef SemanticSimilarity *_semantic_similarity
 
-    def __cinit__(self, np.ndarray[np.float32_t, ndim=2] vocabulary):
+    def __cinit__(self, words_list, np.ndarray[np.float32_t, ndim=2] vocabulary):
+        cdef vector[string] words
+        words.reserve(len(words_list))
+        for word in words_list:
+            if not isinstance(word, str):
+                print(word)
+            words.push_back(word.encode())
+
         cdef np.ndarray[np.float32_t, ndim=2, mode="c"] vocabulary_contiguous = np.ascontiguousarray(vocabulary,
                                                                                                      dtype=np.float32)
-        self._semantic_similarity = new SemanticSimilarity(<float *>vocabulary_contiguous.data, vocabulary.shape[1],
-                                                           vocabulary.shape[0])
+        self._semantic_similarity = new SemanticSimilarity(words, <float *>vocabulary_contiguous.data,
+                                                           vocabulary.shape[1], vocabulary.shape[0])
 
     def __dealloc__(self):
         del self._semantic_similarity
+
+    cpdef void generate_sums_cache(self):
+        self._semantic_similarity.generate_sums_cache()
 
     cpdef float calculate_similarity(self, np.ndarray[np.float32_t, ndim=1] vector_a,
                                      np.ndarray[np.float32_t, ndim=1] vector_b):
@@ -59,5 +71,5 @@ cdef class CppSemanticSimilarity:
                                                               <float *>vector_b_contiguous.data,
                                                               vector_a.shape[0])
 
-    cpdef vector[float] find_most_similar_words(self, int word_index, int number):
-        return self._semantic_similarity.find_most_similar_words(word_index, number)
+    cpdef vector[float] find_most_similar_words(self, word, int number):
+        return self._semantic_similarity.find_most_similar_words(word.encode(), number)
