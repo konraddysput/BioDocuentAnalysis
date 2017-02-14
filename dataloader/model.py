@@ -23,5 +23,5 @@ class LanguageModel:
     def generate_sums_cache(self):
         self._similarity.generate_sums_cache()
 
-    def find_most_similar_words(self, word: str, number_of_results: int) -> List[Tuple[str, float]]:
-        return self._similarity.find_most_similar_words(word, number_of_results)
+    def find_most_similar_words(self, query: List[str], number_of_results: int) -> List[Tuple[str, float]]:
+        return self._similarity.find_most_similar_words(query, number_of_results)
