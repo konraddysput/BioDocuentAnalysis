@@ -15,6 +15,6 @@ def semantic_sim(model: LanguageModel, word1: str, word2: str):
 if __name__ == '__main__':
     random.seed(2017)
     model = LanguageModel('glove.6B.50d.txt')
-    print(model.find_most_similar_words(["person", "sits", "bench"], 10))
+    print(model.find_most_similar_words(["beaver", "lives", "water"], 10))
     # model.generate_sums_cache()
-    # print(model.find_most_similar_words(["dog"], 100))
+    # print(model.find_most_similar_words(["dog"], 10))
