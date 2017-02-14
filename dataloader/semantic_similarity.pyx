@@ -2,6 +2,7 @@ import numpy as np
 cimport numpy as np
 from libcpp.vector cimport vector
 from libcpp.string cimport string
+from libcpp.utility cimport pair
 
 
 cdef inline float _cosine(np.ndarray[np.float32_t, ndim=1] vector_a, np.ndarray[np.float32_t, ndim=1] vector_b):
@@ -35,7 +36,7 @@ cdef extern from "../libraries/document-search-accelerator/accelerator.hpp":
         SemanticSimilarity(vector[string] words, float *vocabulary, int rows, int cols)
         void generate_sums_cache()
         float calculate_similarity(float *vector_a, float *vector_b, int length)
-        vector[float] find_most_similar_words(string word, int number)
+        vector[pair[string, float]] find_most_similar_words(vector[string] query, int number)
 
 
 cdef class CppSemanticSimilarity:
@@ -71,5 +72,10 @@ cdef class CppSemanticSimilarity:
                                                               <float *>vector_b_contiguous.data,
                                                               vector_a.shape[0])
 
-    cpdef vector[float] find_most_similar_words(self, word, int number):
-        return self._semantic_similarity.find_most_similar_words(word.encode(), number)
+    cpdef vector[pair[string, float]] find_most_similar_words(self, query, int number):
+        cdef vector[string] query_words
+        query_words.reserve(len(query))
+        for word in query:
+            query_words.push_back(word.encode())
+
+        return self._semantic_similarity.find_most_similar_words(query_words, number)
