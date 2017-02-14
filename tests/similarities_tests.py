@@ -3,6 +3,8 @@ from dataloader.sim_regression import SimRegression
 from dataloader.model import LanguageModel
 from dataloader.cosine_similarity import CosineSimilarity
 from dataloader.euclidian_similarity import EuclideanSimilarity
+from dataloader.euclidean_similarity_normalized import EuclideanNormalizedSimilarity
+from dataloader.cosine_sigmoid_similarity import CosineSigmoidSimilarity
 
 
 def get_answer(model: LanguageModel, question: str, words):
@@ -43,4 +45,11 @@ def processing_data(path, sim_regression: SimRegression):
           ', effectiveness: ' + str(correct_answer / questions_count))
 
 
+print("Cosine similarity")
 processing_data('esl.txt', CosineSimilarity())
+print("Cosine similarity with sigmoid transform")
+processing_data('esl.txt', CosineSigmoidSimilarity(5, 1))
+print("Euclidean similarity")
+processing_data('esl.txt', EuclideanSimilarity())
+print("Euclidean normalized similarity")
+processing_data('esl.txt', EuclideanNormalizedSimilarity())
