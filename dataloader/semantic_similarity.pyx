@@ -62,17 +62,6 @@ cdef class CppSemanticSimilarity:
     cpdef void generate_sums_cache(self):
         self._semantic_similarity.generate_sums_cache()
 
-    cpdef float calculate_similarity(self, np.ndarray[np.float32_t, ndim=1] vector_a,
-                                     np.ndarray[np.float32_t, ndim=1] vector_b):
-        cdef np.ndarray[np.float32_t, ndim=1, mode="c"] vector_a_contiguous = np.ascontiguousarray(vector_a,
-                                                                                                   dtype=np.float32)
-        cdef np.ndarray[np.float32_t, ndim=1, mode="c"] vector_b_contiguous = np.ascontiguousarray(vector_b,
-                                                                                                   dtype=np.float32)
-
-        return self._semantic_similarity.calculate_similarity(<float *>vector_a_contiguous.data,
-                                                              <float *>vector_b_contiguous.data,
-                                                              vector_a.shape[0])
-
     cpdef vector[pair[string, float]] find_most_similar_words(self, query, int number):
         cdef set[string] query_words
         for word in query:
