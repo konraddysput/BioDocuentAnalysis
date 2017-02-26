@@ -1,6 +1,7 @@
 import pandas as pd
 from collections import Counter
 import re
+import xml.etree.ElementTree as ET
 
 class QueryFilter:
     def __init__(self, path: str):
@@ -26,7 +27,14 @@ class QueryFilter:
         uselessWords = set([x for x in wordCount if wordCount[x] > threshold*queriesNumber])
 
         self.queriesWords = [x - uselessWords for x in self.queriesWords]
-        print(f'useless words: {uselessWords}')
 
-        for query in self.queriesWords:
-            print(query)
+    def mesh_filter(self, path: str):
+        tree = ET.parse(path)
+        elements = tree.findall('.//meshterm/name')
+        values = set([x.text.lower() for x in elements])
+
+        for i, query in enumerate(self.queriesWords):
+            self.queriesWords[i] = set([x.lower() for x in query])
+
+        self.queriesWords = [x & values for x in self.queriesWords]
+
