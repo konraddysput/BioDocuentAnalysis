@@ -1,8 +1,9 @@
 class StopWords:
-    stop_words = [None]
+    stop_words = []
+
     def __init__(self):
         with open('../data/stopwords.txt', 'r') as stopWordsFile:
-            self.stop_words= stopWordsFile.read().split(',')
+            self.stop_words = stopWordsFile.read().split(',')
 
     def is_stop_word(self, word):
         return word in self.stop_words
