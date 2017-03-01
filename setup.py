@@ -13,7 +13,7 @@ extensions = [
                             '-I./libraries/document-search-accelerator/libraries/cpp_redis/includes',
                             '-I./libraries/document-search-accelerator/libraries/cpp_redis/tacopie/includes',
                             '-I./libraries/document-search-accelerator/libraries/fmt'],
-        extra_link_args=['-std=c++1z', '-fopenmp', '-L./libraries/document-search-accelerator/build'],
+        extra_link_args=['-std=c++1z', '-fopenmp', '-L./libraries/document-search-accelerator/build/lib'],
     ),
 ]
 

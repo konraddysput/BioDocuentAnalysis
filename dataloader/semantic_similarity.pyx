@@ -32,12 +32,11 @@ cpdef float calculate_sum_py(np.ndarray[np.float32_t, ndim=1] vector, np.ndarray
     return denominator
 
 
-cdef extern from "../libraries/document-search-accelerator/accelerator.hpp":
+cdef extern from "../libraries/document-search-accelerator/include/accelerator.hpp":
     cdef cppclass SemanticSimilarity:
         SemanticSimilarity(vector[string] words, float *vocabulary, int rows, int cols)
         void generate_sums_cache()
-        float calculate_similarity(float *vector_a, float *vector_b, int length)
-        vector[pair[string, float]] find_most_similar_words(set[string] query, int number)
+        vector[pair[string, float]] find_most_similar_words(set[string] &query, int number)
 
 
 cdef class CppSemanticSimilarity:

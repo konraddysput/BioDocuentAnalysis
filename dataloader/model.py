@@ -1,9 +1,8 @@
-from typing import Dict, Tuple, List
-
-from dataloader.semantic_similarity import calculate_similarity, CppSemanticSimilarity
 import numpy as np
 import pandas as pd
+from typing import Tuple, List
 
+from dataloader.semantic_similarity import CppSemanticSimilarity
 from dataloader.sim_regression import SimRegression
 
 
