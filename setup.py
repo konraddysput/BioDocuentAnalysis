@@ -30,12 +30,10 @@ setup(
     },
 
     install_requires=[
-        'pymongo',
         'click',
         'pandas',
         'scipy',
         'cython',
-        'redis',
     ],
 
     ext_modules=cythonize(extensions)
