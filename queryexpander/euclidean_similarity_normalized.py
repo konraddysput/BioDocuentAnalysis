@@ -1,7 +1,7 @@
 import numpy as np
 from scipy import spatial
 
-from dataloader.euclidian_similarity import EuclideanSimilarity
+from queryexpander.euclidian_similarity import EuclideanSimilarity
 
 
 def normalize(vector: np.ndarray):

@@ -1,7 +1,7 @@
 import numpy as np
 from scipy import spatial
 
-from dataloader.sim_regression import SimRegression
+from queryexpander.sim_regression import SimRegression
 
 
 class EuclideanSimilarity(SimRegression):

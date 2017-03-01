@@ -1,12 +1,12 @@
 from Cython.Build import cythonize
 from setuptools import setup, find_packages, Extension
 
-from dataloader import __version__
+from queryexpander import __version__
 
 extensions = [
     Extension(
-        'dataloader.semantic_similarity',
-        ['dataloader/semantic_similarity.pyx'],
+        'queryexpander.semantic_similarity',
+        ['queryexpander/semantic_similarity.pyx'],
         libraries=['accelerator'],
         language='c++',
         extra_compile_args=['-std=c++1z', '-O3', '-fopenmp',
@@ -25,7 +25,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'TipsterDataLoader = dataloader.__main__:cli',
+            'TipsterDataLoader = queryexpander.__main__:cli',
         ],
     },
 

@@ -1,6 +1,6 @@
-from dataloader.model import LanguageModel
-from dataloader.cosine_similarity import CosineSimilarity
-from dataloader.euclidian_similarity import EuclideanSimilarity
+from queryexpander.model import LanguageModel
+from queryexpander.cosine_similarity import CosineSimilarity
+from queryexpander.euclidian_similarity import EuclideanSimilarity
 import random
 
 if __name__ == '__main__':

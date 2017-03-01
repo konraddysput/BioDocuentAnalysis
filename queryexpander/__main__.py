@@ -4,8 +4,8 @@ from typing import Tuple
 
 import click
 
-from dataloader.database import DatabaseManager
-from dataloader.loading import load_from_directories
+from queryexpander.database import DatabaseManager
+from queryexpander.loading import load_from_directories
 
 
 @click.group()

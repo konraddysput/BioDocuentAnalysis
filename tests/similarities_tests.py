@@ -1,10 +1,10 @@
 import pandas as pd
-from dataloader.sim_regression import SimRegression
-from dataloader.model import LanguageModel
-from dataloader.cosine_similarity import CosineSimilarity
-from dataloader.euclidian_similarity import EuclideanSimilarity
-from dataloader.euclidean_similarity_normalized import EuclideanNormalizedSimilarity
-from dataloader.cosine_sigmoid_similarity import CosineSigmoidSimilarity
+from queryexpander.sim_regression import SimRegression
+from queryexpander.model import LanguageModel
+from queryexpander.cosine_similarity import CosineSimilarity
+from queryexpander.euclidian_similarity import EuclideanSimilarity
+from queryexpander.euclidean_similarity_normalized import EuclideanNormalizedSimilarity
+from queryexpander.cosine_sigmoid_similarity import CosineSigmoidSimilarity
 
 
 def get_answer(model: LanguageModel, question: str, words):

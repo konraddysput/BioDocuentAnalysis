@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 from typing import Tuple, List
 
-from dataloader.semantic_similarity import CppSemanticSimilarity
-from dataloader.sim_regression import SimRegression
+from queryexpander.semantic_similarity import CppSemanticSimilarity
+from queryexpander.sim_regression import SimRegression
 
 
 class LanguageModel:
