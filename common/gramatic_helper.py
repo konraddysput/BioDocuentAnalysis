@@ -1,8 +1,10 @@
+import re
+
 class GramaticHelper:
 
     @staticmethod
     def clean_gramatic_file(file_path):
-        with open(file_path) as file:
+        with open(file_path, encoding="utf8") as file:
             for word_sequence_line in file:
                 word_sequence_line = word_sequence_line.strip()
                 if not word_sequence_line:
@@ -22,21 +24,19 @@ class GramaticHelper:
     @staticmethod
     def remove_interpuction(sequence):
         interpunction_charactes = {'.', ',', ':', ';', '-', '?', '!', '(', ')', '"'}
-        for word in sequence:
-            for character in interpunction_charactes:
-                if character in word:
-                    word = word.replace(character, '')
-            yield word
+        return re.sub('[.,:;-?!()"]', '', sequence)
+
     @staticmethod
     def remove_def_stop_words(sequence):
         default_stop_words = {'a', 'the'}
-        for word in sequence:
-            if word not in default_stop_words:
-                yield word
+
+        querywords = sequence.split()
+        resultwords = [word for word in querywords if word.lower() not in default_stop_words]
+        return ' '.join(resultwords)
 
     @staticmethod
     def to_lower(sequence):
-        return [item.lower() for item in sequence]
+        return sequence.lower()
 
 '''if __name__ == '__main__':
    # print(gramatic_helper.clean_gramatic("Jhon is going to home... to take a shower? No he isn't! He want go play football, or basketball"))
