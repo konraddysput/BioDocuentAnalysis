@@ -10,8 +10,8 @@ class GramaticHelper:
                 if not word_sequence_line:
                     continue
                 word_sequence_line = GramaticHelper.remove_interpuction(word_sequence_line)
-                word_sequence_line = GramaticHelper.remove_def_stop_words(word_sequence_line)
-                yield GramaticHelper.to_lower(word_sequence_line)
+                word_sequence_line = GramaticHelper.to_lower(word_sequence_line)
+                yield GramaticHelper.remove_def_stop_words(word_sequence_line)
 
 
     @staticmethod
@@ -31,7 +31,7 @@ class GramaticHelper:
         default_stop_words = {'a', 'the'}
 
         querywords = sequence.split()
-        resultwords = [word for word in querywords if word.lower() not in default_stop_words]
+        resultwords = [word for word in querywords if word not in default_stop_words]
         return ' '.join(resultwords)
 
     @staticmethod
