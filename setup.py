@@ -18,14 +18,15 @@ extensions = [
 ]
 
 setup(
-    name='TipsterDataLoader',
+    name='QueryExpansion',
     version=__version__,
     packages=find_packages(),
     include_package_data=True,
 
     entry_points={
         'console_scripts': [
-            'TipsterDataLoader = queryexpander.__main__:cli',
+            'QueryExpander = queryexpander.__main__:cli',
+            'VocabularyTester = vocabularytester.__main__:run_test',
         ],
     },
 
