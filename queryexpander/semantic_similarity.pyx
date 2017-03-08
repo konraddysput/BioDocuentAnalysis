@@ -12,6 +12,7 @@ cdef inline float _cosine(np.ndarray[np.float32_t, ndim=1] vector_a, np.ndarray[
 
     return 1 - np.sum(np.dot(vector_a, vector_b)) / np.sqrt(denominator_a * denominator_b)
 
+
 cpdef float calculate_similarity(np.ndarray vector_a, np.ndarray vector_b, np.ndarray vocabulary, redis):
     cdef float numerator = _cosine(vector_a, vector_b)
     cdef float denominator = 0.0

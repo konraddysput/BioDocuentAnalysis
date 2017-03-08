@@ -1,6 +1,6 @@
 import random
 
-from queryexpander.model import LanguageModel
+from queryexpander.expansion import LanguageModel
 
 if __name__ == '__main__':
     random.seed(2017)
