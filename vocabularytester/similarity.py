@@ -50,8 +50,8 @@ class SimilarityCalculator:
                                        na_filter=False).values.squeeze()
 
         self._dictionary: Dict[str, int] = dict(zip(words, range(len(words))))
-        self._vectors: np.ndarray = pd.read_csv(vocabulary_path, sep=' ', quoting=3, header=None, usecols=range(1, 51),
-                                                na_filter=False, dtype=np.float32).values
+        self._vectors: np.ndarray = pd.read_csv(vocabulary_path, sep=' ', quoting=3, header=None, index_col=0,
+                                                na_filter=False).values
 
         self._similarity = similarity_function
 

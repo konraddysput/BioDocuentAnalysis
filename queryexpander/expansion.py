@@ -9,8 +9,8 @@ class QueryExpander:
     def __init__(self, vocabulary_path: str):
         self._words: List[str] = pd.read_csv(
             vocabulary_path, sep=' ', quoting=3, header=None, usecols=(0,), na_filter=False).values.squeeze().tolist()
-        self._vectors: np.ndarray = pd.read_csv(vocabulary_path, sep=' ', quoting=3, header=None, usecols=range(1, 51),
-                                                na_filter=False, dtype=np.float32).values
+        self._vectors: np.ndarray = pd.read_csv(vocabulary_path, sep=' ', quoting=3, header=None, index_col=0,
+                                                na_filter=False).values
 
         self._similarity = CppSemanticSimilarity(self._words, self._vectors)
 
