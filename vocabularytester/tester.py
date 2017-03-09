@@ -17,10 +17,11 @@ def __get_answer(calculator: SimilarityCalculator, question: str, words: np.ndar
     return answer
 
 
-def measure_effectiveness(vocabulary_path: str, data_path: str, sim_regression: SimRegression) -> float:
+def measure_effectiveness(vocabulary_path: str, vocabulary_length: int, data_path: str,
+                          sim_regression: SimRegression) -> float:
     data = pd.read_csv(data_path, sep=' ')
     correct_answers_count = 0
-    calculator = SimilarityCalculator(vocabulary_path, sim_regression)
+    calculator = SimilarityCalculator(vocabulary_path, vocabulary_length, sim_regression)
 
     for row in data.values:
         question = row[0]

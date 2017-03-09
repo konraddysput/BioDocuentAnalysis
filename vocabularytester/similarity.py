@@ -45,13 +45,14 @@ class CosineSigmoidSimilarity(SimRegression):
 
 
 class SimilarityCalculator:
-    def __init__(self, vocabulary_path: str, similarity_function: SimRegression):
+    def __init__(self, vocabulary_path: str, vocabulary_length: int, similarity_function: SimRegression):
         words: List[str] = pd.read_csv(vocabulary_path, sep=' ', quoting=3, header=None, usecols=(0,),
                                        na_filter=False).values.squeeze()
 
         self._dictionary: Dict[str, int] = dict(zip(words, range(len(words))))
-        self._vectors: np.ndarray = pd.read_csv(vocabulary_path, sep=' ', quoting=3, header=None, index_col=0,
-                                                na_filter=False).values
+        self._vectors: np.ndarray = pd.read_csv(vocabulary_path, sep=' ', quoting=3, header=None,
+                                                usecols=range(1, vocabulary_length + 1), na_filter=False,
+                                                dtype=np.float32).values
 
         self._similarity = similarity_function
 
