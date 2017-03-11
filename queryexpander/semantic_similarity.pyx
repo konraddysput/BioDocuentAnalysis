@@ -35,9 +35,9 @@ cpdef float calculate_sum_py(np.ndarray[np.float32_t, ndim=1] vector, np.ndarray
 
 cdef extern from "../libraries/document-search-accelerator/include/accelerator.hpp":
     cdef cppclass SemanticSimilarity:
-        SemanticSimilarity(vector[string] words, float *vocabulary, int rows, int cols)
+        SemanticSimilarity(vector[string] words, double *vocabulary, int rows, int cols)
         void generate_sums_cache()
-        vector[pair[string, float]] find_most_similar_words(set[string] &query, int number)
+        vector[pair[string, double]] find_most_similar_words(set[string] &query, int number)
 
 
 cdef class CppSemanticSimilarity:
@@ -51,9 +51,9 @@ cdef class CppSemanticSimilarity:
                 print(word)
             words.push_back(word.encode())
 
-        cdef np.ndarray[np.float32_t, ndim=2, mode="c"] vocabulary_contiguous = np.ascontiguousarray(vocabulary,
-                                                                                                     dtype=np.float32)
-        self._semantic_similarity = new SemanticSimilarity(words, <float *>vocabulary_contiguous.data,
+        cdef np.ndarray[np.float32_t, ndim=2, mode="c"] vocabulary_contiguous = np.ascontiguousarray(
+            vocabulary.astype(np.float64), dtype=np.float64)
+        self._semantic_similarity = new SemanticSimilarity(words, <double *>vocabulary_contiguous.data,
                                                            vocabulary.shape[1], vocabulary.shape[0])
 
     def __dealloc__(self):
@@ -62,7 +62,7 @@ cdef class CppSemanticSimilarity:
     cpdef void generate_sums_cache(self):
         self._semantic_similarity.generate_sums_cache()
 
-    cpdef vector[pair[string, float]] find_most_similar_words(self, query, int number):
+    cpdef vector[pair[string, double]] find_most_similar_words(self, query, int number):
         cdef set[string] query_words
         for word in query:
             query_words.insert(word.encode())
