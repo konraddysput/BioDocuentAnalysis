@@ -13,7 +13,7 @@ class QueryExpander:
                                                 usecols=range(1, vocabulary_length + 1), na_filter=False,
                                                 dtype=np.float32).values
 
-        self._similarity = CppSemanticSimilarity(self._words, self._vectors, sums_cache_file)
+        self._similarity = CppSemanticSimilarity(self._words, self._vectors, sums_cache_file, centroids_file_path)
 
     def generate_sums_cache(self):
         self._similarity.generate_sums_cache()
