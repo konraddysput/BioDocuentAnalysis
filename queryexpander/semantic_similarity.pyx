@@ -51,7 +51,7 @@ cdef class CppSemanticSimilarity:
                 print(word)
             words.push_back(word.encode())
 
-        cdef np.ndarray[np.float32_t, ndim=2, mode="c"] vocabulary_contiguous = np.ascontiguousarray(
+        cdef np.ndarray[np.float64_t, ndim=2, mode="c"] vocabulary_contiguous = np.ascontiguousarray(
             vocabulary.astype(np.float64), dtype=np.float64)
         self._semantic_similarity = new SemanticSimilarity(words, <double *>vocabulary_contiguous.data,
                                                            vocabulary.shape[1], vocabulary.shape[0])
