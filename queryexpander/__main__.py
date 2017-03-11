@@ -24,7 +24,7 @@ def generate_cache(vocabulary_path: str, vocabulary_length: int, sums_cache_file
 @click.argument('vocabulary_length', required=True, type=int)
 @click.argument('sums_cache_file', required=True, type=str)
 @click.argument('centroids_neighbourhood_size', required=True, type=int)
-@click.argument('centroids_file_path', required=True, type=int)
+@click.argument('centroids_file_path', required=True, type=str)
 def generate_centroids(vocabulary_path: str, vocabulary_length: int, sums_cache_file: str,
                        centroids_neighbourhood_size: int, centroids_file_path: str):
     query_expander = QueryExpander(vocabulary_path, vocabulary_length, sums_cache_file, centroids_file_path)
