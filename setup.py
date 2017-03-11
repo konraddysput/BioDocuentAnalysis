@@ -9,7 +9,7 @@ extensions = [
         ['queryexpander/semantic_similarity.pyx'],
         libraries=['accelerator'],
         language='c++',
-        extra_compile_args=['-std=c++1z', '-O3', '-fopenmp',
+        extra_compile_args=['-std=c++1z', '-O3', '-fopenmp', '-DEIGEN_DONT_PARALLELIZE',
                             '-I./libraries/document-search-accelerator/libraries/fmt'],
         extra_link_args=['-std=c++1z', '-fopenmp', '-L./libraries/document-search-accelerator/build/lib'],
     ),
