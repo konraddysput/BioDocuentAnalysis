@@ -44,3 +44,5 @@ class BioNLP:
             vector += self._w2v.get_word_vector(word) * TF * IDF
             scalar += IDF * TF
         return vector / scalar
+
+    
