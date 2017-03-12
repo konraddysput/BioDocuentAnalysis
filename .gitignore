@@ -94,3 +94,7 @@ ENV/
 
 # PyCharm
 .idea/
+
+tests/glove\.840B\.300d\.txt
+
+tests/glove\.6B\.50d\.txt
