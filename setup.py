@@ -33,6 +33,7 @@ setup(
         'pandas',
         'scipy',
         'cython',
+        'lxml'
     ],
 
     ext_modules=cythonize(extensions)

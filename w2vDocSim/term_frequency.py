@@ -26,11 +26,11 @@ class TermFrequency:
     def word_in_documents(self, word, documents):
         return [word in s.split(' ') for s in documents].count(True)
 
-if __name__ == '__main__':
-    documents = [" to jest test ktory sprawdzi czy slowo jest zawarte w stringu", "jem banana", "kupie  test test krakersy",
-                 "testcik"]
-    termFrequency = TermFrequency()
-    print(termFrequency.calculate_term_frequency("test", documents[0]))
-    print(termFrequency.calculate_inverse_document_frequency("test", documents))
-    print(termFrequency.word_in_documents("test", documents))
+# if __name__ == '__main__':
+#     documents = [" to jest test ktory sprawdzi czy slowo jest zawarte w stringu", "jem banana", "kupie  test test krakersy",
+#                  "testcik"]
+#     termFrequency = TermFrequency()
+#     print(termFrequency.calculate_term_frequency("test", documents[0]))
+#     print(termFrequency.calculate_inverse_document_frequency("test", documents))
+#     print(termFrequency.word_in_documents("test", documents))
 
