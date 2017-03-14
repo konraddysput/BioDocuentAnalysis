@@ -44,7 +44,7 @@ cdef extern from "../libraries/document-search-accelerator/include/accelerator.h
 cdef class CppSemanticSimilarity:
     cdef SemanticSimilarity *_semantic_similarity
 
-    def __cinit__(self, words_list, np.ndarray[np.float32_t, ndim=2] vocabulary, idfs_cache_file, centroids_file_path):
+    def __cinit__(self, words_list, np.ndarray[np.float32_t, ndim=2] vocabulary, centroids_file_path, idfs_cache_file):
         cdef vector[string] words
         words.reserve(len(words_list))
         for word in words_list:
@@ -56,7 +56,7 @@ cdef class CppSemanticSimilarity:
             vocabulary.astype(np.float64), dtype=np.float64)
         self._semantic_similarity = new SemanticSimilarity(words, <double *>vocabulary_contiguous.data,
                                                            vocabulary.shape[1], vocabulary.shape[0],
-                                                           idfs_cache_file.encode(), centroids_file_path.encode())
+                                                           centroids_file_path.encode(), idfs_cache_file.encode())
 
     def __dealloc__(self):
         del self._semantic_similarity

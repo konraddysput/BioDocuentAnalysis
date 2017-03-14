@@ -6,14 +6,14 @@ from queryexpander.semantic_similarity import CppSemanticSimilarity
 
 
 class QueryExpander:
-    def __init__(self, vocabulary_path: str, vocabulary_length: int, idfs_cache_file: str, centroids_file_path: str):
+    def __init__(self, vocabulary_path: str, vocabulary_length: int, centroids_file_path: str, idfs_cache_file: str):
         self._words: List[str] = pd.read_csv(
             vocabulary_path, sep=' ', quoting=3, header=None, usecols=(0,), na_filter=False).values.squeeze().tolist()
         self._vectors: np.ndarray = pd.read_csv(vocabulary_path, sep=' ', quoting=3, header=None,
                                                 usecols=range(1, vocabulary_length + 1), na_filter=False,
                                                 dtype=np.float32).values
 
-        self._similarity = CppSemanticSimilarity(self._words, self._vectors, idfs_cache_file, centroids_file_path)
+        self._similarity = CppSemanticSimilarity(self._words, self._vectors, centroids_file_path, idfs_cache_file)
 
     def generate_sums_cache(self):
         self._similarity.generate_sums_cache()
