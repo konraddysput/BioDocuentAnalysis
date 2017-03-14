@@ -35,9 +35,8 @@ cpdef float calculate_sum_py(np.ndarray[np.float32_t, ndim=1] vector, np.ndarray
 
 cdef extern from "../libraries/document-search-accelerator/include/accelerator.hpp":
     cdef cppclass SemanticSimilarity:
-        SemanticSimilarity(vector[string] words, double *vocabulary, int rows, int cols, const string &sums_cache_file,
-                           const string &centroids_file_path)
-        void generate_sums_cache()
+        SemanticSimilarity(vector[string] words, double *vocabulary, int rows, int cols, string centroids_file_path,
+                           string idfs_cache_file)
         void generate_local_centroids(uint8_t neighbourhood_size)
         vector[pair[string, double]] find_most_similar_words(set[string] &query, int number)
 
@@ -45,7 +44,7 @@ cdef extern from "../libraries/document-search-accelerator/include/accelerator.h
 cdef class CppSemanticSimilarity:
     cdef SemanticSimilarity *_semantic_similarity
 
-    def __cinit__(self, words_list, np.ndarray[np.float32_t, ndim=2] vocabulary, sums_cache_file, centroids_file_path):
+    def __cinit__(self, words_list, np.ndarray[np.float32_t, ndim=2] vocabulary, idfs_cache_file, centroids_file_path):
         cdef vector[string] words
         words.reserve(len(words_list))
         for word in words_list:
@@ -57,13 +56,10 @@ cdef class CppSemanticSimilarity:
             vocabulary.astype(np.float64), dtype=np.float64)
         self._semantic_similarity = new SemanticSimilarity(words, <double *>vocabulary_contiguous.data,
                                                            vocabulary.shape[1], vocabulary.shape[0],
-                                                           sums_cache_file.encode(), centroids_file_path.encode())
+                                                           idfs_cache_file.encode(), centroids_file_path.encode())
 
     def __dealloc__(self):
         del self._semantic_similarity
-
-    cpdef void generate_sums_cache(self):
-        self._semantic_similarity.generate_sums_cache()
 
     cpdef void generate_local_centroids(self, uint8_t neighbourhood_size):
         self._semantic_similarity.generate_local_centroids(neighbourhood_size)
