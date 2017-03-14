@@ -20,6 +20,7 @@ def get_docs2():
         docs.append(element_to_object(child))
     return docs
 
+
 def element_to_object(element):
     obj = Object()
     obj.docno = element.find("DOCNO").text
@@ -35,6 +36,7 @@ def element_to_object(element):
     doc_text = re.sub('[\n.,()_]', '', doc_text).lower()
     obj.text = doc_text
     return obj
+
 
 def get_queries():
     queries = []

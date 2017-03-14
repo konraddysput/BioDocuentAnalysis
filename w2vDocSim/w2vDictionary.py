@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from typing import Tuple, List
 
+
 class W2vDictionary:
     def __init__(self, vocabulary_path: str, vocabulary_length: int):
         self._vocabulary_length = vocabulary_length
@@ -20,3 +21,7 @@ class W2vDictionary:
         if word in self._words:
             return self._vectors[self._dictionary[word]]
         return np.ndarray(shape=(self._vocabulary_length))
+
+    @property
+    def vocabulary_length(self) -> int:
+        return self._vocabulary_length
