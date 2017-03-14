@@ -32,7 +32,10 @@ def generate_centroids(vocabulary_path: str, vocabulary_length: int, centroids_n
 def expand(query: str, vocabulary_path: str, vocabulary_length: int, number_of_additional_words: int,
            centroids_file_path: str, idfs_cache_file: str):
     query_expander = QueryExpander(vocabulary_path, vocabulary_length, centroids_file_path, idfs_cache_file)
-    print(query_expander.find_most_similar_words(query.rstrip('\n').lower().split(' '), number_of_additional_words))
+    expansions = query_expander.find_most_similar_words(query.rstrip('\n').lower().split(' '), number_of_additional_words)
+
+    for word, score in expansions:
+        print(f'{word.decode()}: {score}')
 
 
 @click.command()
