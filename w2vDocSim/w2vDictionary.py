@@ -23,5 +23,13 @@ class W2vDictionary:
         return np.ndarray(shape=(self._vocabulary_length))
 
     @property
+    def words(self):
+        return self._words
+
+    @property
+    def dictionary(self):
+        return self._dictionary
+
+    @property
     def vocabulary_length(self) -> int:
         return self._vocabulary_length

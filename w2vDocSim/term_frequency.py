@@ -1,24 +1,23 @@
 from math import log
 
 import numpy as np
-from typing import List
+from typing import List, Dict
 
 
 class TermFrequency:
     def calculate_term_frequency(self, word, split_document):
         return split_document.count(word) / len(split_document)
 
-    def calculate_inverse_document_frequencies(self, words: List[str], documents) -> np.ndarray:
-        words_set = set(words)
-        idfs = np.zeros((len(words), 1), dtype=np.uint32)
+    def calculate_inverse_document_frequencies(self, documents, index_map: Dict[str, int]) -> np.ndarray:
+        idfs = np.zeros((len(index_map), 1), dtype=np.uint32)
 
         for document in documents:
             split_document = document.split()
             added_words = set()
-            for index, word in enumerate(split_document):
-                if word in words_set and word not in added_words:
+            for word in split_document:
+                if word in index_map and word not in added_words:
                     added_words.add(word)
-                    idfs[index] += 1
+                    idfs[index_map[word]] += 1
 
         return np.log(1 / idfs * len(documents))
 
