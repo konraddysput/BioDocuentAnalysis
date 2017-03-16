@@ -18,9 +18,10 @@ class W2vDictionary:
             index += 1
 
     def get_word_vector(self, word: str):
-        if word in self._words:
-            return self._vectors[self._dictionary[word]]
-        return np.ndarray(shape=(self._vocabulary_length))
+        return self._vectors[self._dictionary[word]]
+
+    def get_vector_from_index(self, index: int):
+        return self._vectors[index]
 
     @property
     def words(self):
