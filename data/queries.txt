@@ -1,0 +1,15 @@
+Find protein sequencing data related to bacterial chemotaxis across all databases
+Search for data of all types related to MIP-2 gene related to biliary atresia across all databases
+Search for all data types related to gene TP53INP1 in relation to p53 activation across all databases
+Find all data types related to inflammation during oxidative stress in human hepatic cells across all databases
+Search for gene expression and genetic deletion data that mention CD69 in memory augmentation studies across all databases
+Search for data of all types related to the LDLR gene related to cardiovascular disease across all databases
+Search for gene expression datasets on photo transduction and regulation of calcium in blind D. melanogaster
+Search for proteomic data related to regulation of calcium in blind D. melanogaster
+Search for data of all types related to the ob gene in obese M. musculus across all databases
+Search for data of all types related to energy metabolism in obese M. musculus
+Search for all data for the HTT gene related to Huntington’s disease across all databases
+Search for data on neural brain tissue in transgenic mice related to Huntington’s disease
+Search for all data on the SNCA gene related to Parkinson’s disease across all databases
+Search for data on nerve cells in the substantia nigra in mice across all databases
+Find data on the NF-κB signaling pathway in MG (Myasthenia gravis) patients

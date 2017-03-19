@@ -13,23 +13,17 @@ class BioNLP:
 
     def meth_distance(self, docs, queries):
         results = []
-        print('meth_distance')
-
         docs_text = [o.text for o in docs]
 
-        print('Calcularing doc vectors:')
         size = len(docs)
         i = 1
         for doc in docs:
-            print('{}/{}'.format(i, size))
             vector = self.text_vector(docs_text, doc.text)
             doc.vector = vector
             i += 1
-        print('DONE')
 
         i = 1
         for query in queries:
-            print('query: ' + i)
             vector = self.text_vector(queries, query)
             distances = []
             for doc in docs:
@@ -37,6 +31,7 @@ class BioNLP:
                 obj = Object()
                 obj.docno = doc.docno
                 obj.distance = distance
+                print('{}/{}'.format(doc.docno, distance))
                 distances.append(obj)
 
             distances = sorted(distances, key=lambda student: distance[1])
@@ -88,4 +83,3 @@ class BioNLP:
             scalar += IDF * TF
         return vector / scalar
 
-    

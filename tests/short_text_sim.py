@@ -10,7 +10,7 @@ class Object:
     pass
 
 def get_docs2():
-    with open('biocaddieTerrierValid.xml', 'rb') as data:
+    with open('/home/konrad/Dokumenty/Repozytoria/BioDocumentAnalysis/data/biocaddieTerrierValid.xml', 'rb') as data:
         xml = data.read()
         parser = etree.XMLParser(recover=True) # recover from bad characters.
         root = etree.fromstring(xml, parser=parser)
@@ -38,23 +38,26 @@ def element_to_object(element):
 
 def get_queries():
     queries = []
-    with open('../data/queries.txt') as queries_file:
+    with open('/home/konrad/Dokumenty/Repozytoria/BioDocumentAnalysis/data/queries.txt') as queries_file:
         for line in queries_file:
             queries.append(re.sub('[\n.,()_]', '', line).lower())
     return queries
 
-if __name__ == '__main__':
+def get_text_similarity():
     queries = get_queries()
     docs = get_docs2()
-    model = W2vDictionary("glove.6B.50d.txt", 50)
+    model = W2vDictionary("/home/konrad/Dokumenty/Repozytoria/BioDocumentAnalysis/data/glove.6B.50d.txt", 50)
     similarity = CosineSimilarity()
-    bioNLP = BioNLP(similarity, model)
+    bio_nlp = BioNLP(similarity, model)
 
-    results = bioNLP.meth_distance(docs, queries)
+    return bio_nlp.meth_distance(docs, queries)
 
-    for result in results:
-        print(result.query)
-        print(result.closest)
+if __name__ == '__main__':
+    results = get_text_similarity()
+    #
+    # for result in results:
+    #     print(result.query)
+    #     print(result.closest)
 
     # array = ["dog rhino", "computer printer"]
     #
