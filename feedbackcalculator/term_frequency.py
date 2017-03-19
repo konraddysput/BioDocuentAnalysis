@@ -11,7 +11,11 @@ def calculate_term_frequencies(split_document: List[str], index_map: Dict[str, i
     return occurrences / len(split_document)
 
 
-def calculate_inverse_document_frequencies(documents, index_map: Dict[str, int]) -> np.ndarray:
+def calculate_inverse_document_frequencies(documents: List[str], index_map: Dict[str, int]) -> np.ndarray:
+    if len(documents) == 1:
+        # TODO: is this a valid action for one-document collection?
+        return np.ones((len(index_map),), dtype=np.uint32)
+
     occurrences = np.zeros((len(index_map),), dtype=np.uint32)
 
     for document in documents:

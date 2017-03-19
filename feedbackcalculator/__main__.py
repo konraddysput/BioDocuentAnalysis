@@ -17,8 +17,7 @@ def cli():
 def get_docs(file_path: str):
     with open(file_path, 'rb') as data:
         xml = data.read()
-        parser = etree.XMLParser(recover=True)  # recover from bad characters.
-        root = etree.fromstring(xml, parser=parser)
+        root = etree.fromstring(xml)
 
     return [document_to_dict(child) for child in root]
 
@@ -56,14 +55,13 @@ def get_queries(file_path: str):
 @click.argument('query', required=True, type=str)
 def get_ranking_for_query(docs_file_path: str, vocabulary_file_path: str, vocabulary_length: int, query: str):
     docs = get_docs(docs_file_path)
-    print(len(docs))
     model = W2vDictionary(vocabulary_file_path, vocabulary_length)
     similarity = CosineSimilarity()
 
-    nlp = BioNLP(similarity, model)
-    results = nlp.meth_distance(docs, [query])
-
-    print(f'{results[0][0]}/{results[0][1]}')
+    nlp = BioNLP(similarity, model, docs)
+    _, documents_ranking = nlp.meth_distance([query])[0]
+    for document_info in documents_ranking:
+        print(f'{document_info["docno"]}/{document_info["distance"]}')
 
 
 @click.command()
@@ -77,9 +75,9 @@ def get_ranking_for_all_queries(docs_file_path: str, vocabulary_file_path: str, 
     docs = get_docs(docs_file_path)
     model = W2vDictionary(vocabulary_file_path, vocabulary_length)
     similarity = CosineSimilarity()
-    nlp = BioNLP(similarity, model)
+    nlp = BioNLP(similarity, model, docs)
 
-    results = nlp.meth_distance(docs, queries)
+    results = nlp.meth_distance(queries)
 
     for result in results:
         print(f'{result[0]}/{result[1]}')

@@ -8,15 +8,12 @@ from feedbackcalculator.w2vDictionary import W2vDictionary
 
 
 class BioNLP:
-    def __init__(self, similarity: SimRegression, w2v: W2vDictionary, docs: List[Dict[str, Any]] = [], avgsl: int = 0):
+    def __init__(self, similarity: SimRegression, w2v: W2vDictionary, docs: List[Dict[str, Any]], avgsl: int=0):
         self._similarity = similarity
         self._w2v = w2v
-
+        self._docs = docs
+        self._docs_idfs = calculate_inverse_document_frequencies([doc['text'] for doc in docs], self._w2v.dictionary)
         self._avgsl = avgsl
-
-        print('Calculating documents\' IDFs')
-        docs_texts = [doc['text'] for doc in docs]
-        self._docs_idfs = calculate_inverse_document_frequencies(docs_texts, self._w2v.dictionary)
 
     def _calculate_vector_for_text(self, text: str, idfs: np.ndarray) -> np.ndarray:
         text_split = text.split(' ')
@@ -35,9 +32,8 @@ class BioNLP:
 
         return vector / scalar
 
-    def meth_distance(self, docs: List[Dict[str, Any]], queries: List[str]):
-        for i, doc in enumerate(docs):
-            print(f'\r{i}/{size}', end='')
+    def meth_distance(self, queries: List[str]):
+        for i, doc in enumerate(self._docs):
             vector = self._calculate_vector_for_text(doc['text'], self._docs_idfs)
             doc['vector'] = vector
 
@@ -48,7 +44,7 @@ class BioNLP:
             vector = self._calculate_vector_for_text(query, queries_idfs)
             distances = SortedListWithKey(key=lambda distance: distance['distance'])
 
-            for doc in docs:
+            for doc in self._docs:
                 distance = self._similarity.calculate_similarity(vector, doc['vector'])
                 distances.add({
                     'docno': doc['docno'],
@@ -60,7 +56,6 @@ class BioNLP:
         return results
 
     def _semantic_similarity(self, mainWord: str, sentence: str):
-        # FIXME: probably broken by refactor
         sentenceSet = set(sentence.split(" "))
         maxSim = 0
 
