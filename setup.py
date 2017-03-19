@@ -25,6 +25,7 @@ setup(
         'console_scripts': [
             'QueryExpander = queryexpander.__main__:cli',
             'VocabularyTester = vocabularytester.__main__:run_test',
+            'FeedbackCalculator = feedbackcalculator.__main__:cli',
         ],
     },
 

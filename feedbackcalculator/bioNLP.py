@@ -3,8 +3,8 @@ from sortedcontainers import SortedListWithKey
 from typing import Dict, Any, List
 
 from vocabularytester.similarity import SimRegression
-from w2vDocSim.term_frequency import calculate_term_frequencies, calculate_inverse_document_frequencies
-from w2vDocSim.w2vDictionary import W2vDictionary
+from feedbackcalculator.term_frequency import calculate_term_frequencies, calculate_inverse_document_frequencies
+from feedbackcalculator.w2vDictionary import W2vDictionary
 
 
 class BioNLP:
@@ -33,7 +33,6 @@ class BioNLP:
         docs_texts = [doc['text'] for doc in docs]
         docs_idfs = calculate_inverse_document_frequencies(docs_texts, self._w2v.dictionary)
 
-        size = len(docs)
         for i, doc in enumerate(docs):
             vector = self._calculate_vector_for_text(doc['text'], docs_idfs)
             doc['vector'] = vector
@@ -41,7 +40,6 @@ class BioNLP:
         queries_idfs = calculate_inverse_document_frequencies(queries, self._w2v.dictionary)
 
         results = []
-        size = len(queries)
         for i, query in enumerate(queries):
             vector = self._calculate_vector_for_text(query, queries_idfs)
             distances = SortedListWithKey(key=lambda distance: distance['distance'])
@@ -52,7 +50,6 @@ class BioNLP:
                     'docno': doc['docno'],
                     'distance': distance
                 })
-                print('{}/{}'.format(doc['docno'], distance))
 
             results.append((i, distances[:100]))
 
