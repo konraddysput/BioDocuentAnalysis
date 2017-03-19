@@ -1,63 +1,58 @@
-from w2vDocSim.w2vDictionary import W2vDictionary
-from w2vDocSim.bioNLP import BioNLP
-from vocabularytester.similarity import CosineSimilarity
-from lxml import etree
 import re
-import time
+
+from lxml import etree
+
+from vocabularytester.similarity import CosineSimilarity
+from w2vDocSim.bioNLP import BioNLP
+from w2vDocSim.w2vDictionary import W2vDictionary
 
 
-class Object:
-    pass
-
-def get_docs2():
+def get_docs():
     with open('/home/konrad/Dokumenty/Repozytoria/BioDocumentAnalysis/data/biocaddieTerrierValid.xml', 'rb') as data:
         xml = data.read()
         parser = etree.XMLParser(recover=True) # recover from bad characters.
         root = etree.fromstring(xml, parser=parser)
 
-    docs = []
-    for child in root:
-        docs.append(element_to_object(child))
-    return docs
+    return [docs.append(document_to_dict(child)) for child in root]
 
-def element_to_object(element):
-    obj = Object()
-    obj.docno = element.find("DOCNO").text
-    title = element.find("TITLE").text
-    desc = element.find("DESCRIPTION").text
+
+def document_to_dict(element):
+    document = {
+        'docno': element.find('DOCNO').text
+    }
+    title = element.find('TITLE').text
+    desc = element.find('DESCRIPTION').text
 
     if not isinstance(title, str):
         title = ''
     if not isinstance(desc, str):
         desc = ''
 
-    doc_text = title + ' ' + desc
-    doc_text = re.sub('[\n.,()_]', '', doc_text).lower()
-    obj.text = doc_text
-    return obj
+    document.update({
+        'title': title,
+        'desc': desc,
+        'text': re.sub('[\n.,()_]', '', f'{title} {desc}').lower()
+    })
+
+    return document
+
 
 def get_queries():
-    queries = []
     with open('/home/konrad/Dokumenty/Repozytoria/BioDocumentAnalysis/data/queries.txt') as queries_file:
-        for line in queries_file:
-            queries.append(re.sub('[\n.,()_]', '', line).lower())
-    return queries
-
-def get_text_similarity():
-    queries = get_queries()
-    docs = get_docs2()
-    model = W2vDictionary("/home/konrad/Dokumenty/Repozytoria/BioDocumentAnalysis/data/glove.6B.50d.txt", 50)
-    similarity = CosineSimilarity()
-    bio_nlp = BioNLP(similarity, model)
-
-    return bio_nlp.meth_distance(docs, queries)
+        return [re.sub('[\n.,()_]', '', line).lower() for line in queries_file]
 
 if __name__ == '__main__':
-    results = get_text_similarity()
-    #
-    # for result in results:
-    #     print(result.query)
-    #     print(result.closest)
+    queries = get_queries()
+    docs = get_docs()
+    model = W2vDictionary('glove.6B.50d.txt', 50)
+    similarity = CosineSimilarity()
+    bioNLP = BioNLP(similarity, model)
+
+    results = bioNLP.meth_distance(docs, queries)
+
+    for result in results:
+        print(result[0])
+        print(result[1])
 
     # array = ["dog rhino", "computer printer"]
     #

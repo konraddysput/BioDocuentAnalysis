@@ -1,51 +1,65 @@
-from vocabularytester.similarity import SimRegression
-from w2vDocSim.w2vDictionary import W2vDictionary
-from w2vDocSim.term_frequency import TermFrequency
+import numpy as np
+from sortedcontainers import SortedListWithKey
+from typing import Dict, Any, List
 
-class Object:
-    pass
+from vocabularytester.similarity import SimRegression
+from w2vDocSim.term_frequency import calculate_term_frequencies, calculate_inverse_document_frequencies
+from w2vDocSim.w2vDictionary import W2vDictionary
+
 
 class BioNLP:
     def __init__(self, similarity: SimRegression, w2v: W2vDictionary):
         self._similarity = similarity
         self._w2v = w2v
-        self._tf = TermFrequency()
 
-    def meth_distance(self, docs, queries):
-        results = []
-        docs_text = [o.text for o in docs]
+    def _calculate_vector_for_text(self, text: str, idfs: np.ndarray) -> np.ndarray:
+        text_split = text.split(' ')
+        tfs = calculate_term_frequencies(text_split, self._w2v.dictionary)
+
+        scalar = 0
+        vector = np.zeros(shape=(self._w2v.vocabulary_length,), dtype=np.float64)
+        for word in text_split:
+            try:
+                word_index = self._w2v.dictionary[word]
+                tf_idf = tfs[word_index] * idfs[word_index]
+                vector += self._w2v.get_vector_from_index(word_index) * tf_idf
+                scalar += tf_idf
+            except KeyError:
+                pass
+
+        return vector / scalar
+
+    def meth_distance(self, docs: List[Dict[str, Any]], queries: List[str]):
+        docs_texts = [doc['text'] for doc in docs]
+        docs_idfs = calculate_inverse_document_frequencies(docs_texts, self._w2v.dictionary)
 
         size = len(docs)
-        i = 1
-        for doc in docs:
-            vector = self.text_vector(docs_text, doc.text)
-            doc.vector = vector
-            i += 1
+        for i, doc in enumerate(docs):
+            vector = self._calculate_vector_for_text(doc['text'], docs_idfs)
+            doc['vector'] = vector
 
-        i = 1
-        for query in queries:
-            vector = self.text_vector(queries, query)
-            distances = []
+        queries_idfs = calculate_inverse_document_frequencies(queries, self._w2v.dictionary)
+
+        results = []
+        size = len(queries)
+        for i, query in enumerate(queries):
+            vector = self._calculate_vector_for_text(query, queries_idfs)
+            distances = SortedListWithKey(key=lambda distance: distance['distance'])
+
             for doc in docs:
-                distance = self._similarity.calculate_similarity(vector, doc.vector)
-                obj = Object()
-                obj.docno = doc.docno
-                obj.distance = distance
-                print('{}/{}'.format(doc.docno, distance))
-                distances.append(obj)
+                distance = self._similarity.calculate_similarity(vector, doc['vector'])
+                distances.add({
+                    'docno': doc['docno'],
+                    'distance': distance
+                })
+                print('{}/{}'.format(doc['docno'], distance))
 
-            distances = sorted(distances, key=lambda student: distance[1])
-            obj = Object()
-            obj.query = i
-            obj.closest = distances[:100]
-            results.append(obj)
-            i += 1
+            results.append((i, distances[:100]))
 
         return results
 
-    # def meth_similarity(self):
-
     def semantic_similarity(self, mainWord: str, sentence: str):
+        # FIXME: probably broken by refactor
         sentenceSet = set(sentence.split(" "))
         maxSim = 0
 
@@ -61,25 +75,14 @@ class BioNLP:
         return maxSim
 
     def semantic_text_similarity(self, docs, avgsl, text: str, query: str, k: float, b: float):
-        textSplit = text.split(" ")
-        querySplit = query.split(" ")
-        textSet = set(textSplit)
+        # FIXME: broken by refactor
+        text_split = text.split(" ")
+        query_split = query.split(" ")
+        text_set = set(text_split)
         sum = 0
-        for word in textSet:
-            IDF = self._tf.calculate_inverse_document_frequency(word, docs)
+        for word in text_set:
+            idf = self._tf.calculate_inverse_document_frequency(word, docs)
             sem = self.semantic_similarity(word, query)
-            bracket = 1 - b + (b * len(querySplit) / avgsl)
-            sum += IDF * (sem * (k + 1)) / (sem + k * bracket)
+            bracket = 1 - b + (b * len(query_split) / avgsl)
+            sum += idf * (sem * (k + 1)) / (sem + k * bracket)
         return sum
-
-    def text_vector(self, docs, text: str):
-        textSplit = text.split(" ")
-        scalar = 0
-        vector = 0
-        for word in textSplit:
-            TF = self._tf.calculate_term_frequency(word, text)
-            IDF = self._tf.calculate_inverse_document_frequency(word, docs)
-            vector += self._w2v.get_word_vector(word) * TF * IDF
-            scalar += IDF * TF
-        return vector / scalar
-

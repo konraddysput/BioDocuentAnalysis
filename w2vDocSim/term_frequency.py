@@ -1,36 +1,28 @@
-from math import log
+import numpy as np
+from typing import List, Dict
 
 
-class TermFrequency:
+def calculate_term_frequencies(split_document: List[str], index_map: Dict[str, int]) -> np.ndarray:
+    occurrences = np.zeros((len(index_map),), dtype=np.uint32)
+    for word in split_document:
+        if word in index_map:
+            occurrences[index_map[word]] += 1
 
-    def total_words_in_document(self):
-        count = 0
-        for item in self.documents:
-            count += len(item.split())
-        return count
+    return occurrences / len(split_document)
 
-    def count_word_in_document(self, word, sentence):
-        count = 0
-        for sentenceWord in sentence:
-            if(word == sentenceWord):
-                count += 1
-        return count
 
-    def calculate_term_frequency(self, word, document):
-        splitedDocument = document.split()
-        return self.count_word_in_document(word, splitedDocument) / len(splitedDocument)
+def calculate_inverse_document_frequencies(documents, index_map: Dict[str, int]) -> np.ndarray:
+    occurrences = np.zeros((len(index_map),), dtype=np.uint32)
 
-    def calculate_inverse_document_frequency(self, word, documents):
-        return log(len(documents) / self.word_in_documents(word,documents))
+    for document in documents:
+        split_document = document.split()
+        added_words = set()
+        for word in split_document:
+            if word in index_map and word not in added_words:
+                added_words.add(word)
+                occurrences[index_map[word]] += 1
 
-    def word_in_documents(self, word, documents):
-        return [word in s.split(' ') for s in documents].count(True)
-
-# if __name__ == '__main__':
-#     documents = [" to jest test ktory sprawdzi czy slowo jest zawarte w stringu", "jem banana", "kupie  test test krakersy",
-#                  "testcik"]
-#     termFrequency = TermFrequency()
-#     print(termFrequency.calculate_term_frequency("test", documents[0]))
-#     print(termFrequency.calculate_inverse_document_frequency("test", documents))
-#     print(termFrequency.word_in_documents("test", documents))
-
+    with np.errstate(divide='ignore'):
+        idfs = np.log(len(documents) / occurrences)
+        idfs[idfs == np.inf] = 0.0
+        return idfs

@@ -33,6 +33,7 @@ setup(
         'pandas',
         'scipy',
         'cython',
+        'sortedcontainers',
         'lxml'
     ],
 
